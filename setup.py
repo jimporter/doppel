@@ -14,16 +14,17 @@ setup(
     name='doppel',
     version=version,
 
-    description='A friendly file installer/copier',
+    description='A friendly file copier/installer',
     long_description=long_desc,
-    keywords='file installer and copier',
+    keywords='file copier and installer',
+    url='https://github.com/jimporter/doppel'
 
     author='Jim Porter',
     author_email='porterj@alum.rit.edu',
     license='BSD',
 
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 2 - Pre-Alpha',
 
         'Intended Audience :: Developers',
 
