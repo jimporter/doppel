@@ -1,0 +1,4 @@
+*.pyc
+/doppel.egg-info/
+/build/
+/dist/
