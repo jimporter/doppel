@@ -17,7 +17,7 @@ setup(
     description='A friendly file copier/installer',
     long_description=long_desc,
     keywords='file copier and installer',
-    url='https://github.com/jimporter/doppel'
+    url='https://github.com/jimporter/doppel',
 
     author='Jim Porter',
     author_email='porterj@alum.rit.edu',
