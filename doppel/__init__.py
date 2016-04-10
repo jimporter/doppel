@@ -19,7 +19,7 @@ def makedirs(path, mode=0o777, exist_ok=False):
             raise
 
 
-def copy(src, dst):
+def copy(src, dst, mode=None):
     if os.path.isdir(src):
         mkdir(dst, exist_ok=True)
         for name in os.listdir(src):
@@ -28,4 +28,7 @@ def copy(src, dst):
             copy(srcname, dstname)
     else:
         shutil.copyfile(src, dst)
-        shutil.copymode(src, dst)
+        if mode:
+            os.chmod(dst, mode)
+        else:
+            shutil.copymode(src, dst)
