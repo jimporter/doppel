@@ -1,3 +1,4 @@
+import re
 from setuptools import setup, find_packages
 from doppel.version import version
 
@@ -15,7 +16,8 @@ except:
     pass
 
 with open('README.md', 'r') as f:
-    long_desc = f.read()
+    # Read from the file and strip out the badges.
+    long_desc = re.sub(r'(^# doppel)\n\n(.+\n)*', r'\1', f.read())
 
 try:
     import pypandoc
