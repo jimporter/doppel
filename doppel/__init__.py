@@ -23,12 +23,10 @@ def copy(src, dst, mode=None):
     if os.path.isdir(src):
         mkdir(dst, exist_ok=True)
         for name in os.listdir(src):
-            srcname = os.path.join(src, name)
-            dstname = os.path.join(dst, name)
-            copy(srcname, dstname)
+            copy(os.path.join(src, name), os.path.join(dst, name))
     else:
         shutil.copyfile(src, dst)
-        if mode:
+        if mode is not None:
             os.chmod(dst, mode)
         else:
             shutil.copymode(src, dst)

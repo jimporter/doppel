@@ -1,6 +1,19 @@
 from setuptools import setup, find_packages
 from doppel.version import version
 
+custom_cmds = {}
+
+try:
+    from flake8.main import Flake8Command
+
+    class LintCommand(Flake8Command):
+        def distribution_files(self):
+            return ['setup.py', 'doppel', 'test']
+
+    custom_cmds['lint'] = LintCommand
+except:
+    pass
+
 with open('README.md', 'r') as f:
     long_desc = f.read()
 
@@ -42,6 +55,7 @@ setup(
 
     extras_require={
         'deploy': ['pypandoc'],
+        'lint': ['flake8'],
     },
 
     entry_points={
@@ -49,4 +63,7 @@ setup(
             'doppel=doppel.driver:main',
         ]
     },
+
+    test_suite='test',
+    cmdclass=custom_cmds,
 )
