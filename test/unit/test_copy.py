@@ -2,7 +2,7 @@ import os
 import unittest
 import shutil
 
-from doppel import copy
+from doppel import copy, makedirs, mkdir
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
 test_data_dir = os.path.join(this_dir, '..', 'data')
@@ -14,8 +14,11 @@ class TestCopy(unittest.TestCase):
         self.stage = os.path.join(test_stage_dir, 'copy')
         if os.path.exists(self.stage):
             shutil.rmtree(os.path.join(self.stage))
-        os.makedirs(self.stage)
+        makedirs(self.stage)
         os.chdir(test_data_dir)
+
+        # Git doesn't store empty directories, so make one.
+        mkdir('empty_dir', exist_ok=True)
 
     def test_copy_file(self):
         dst = os.path.join(self.stage, 'file.txt')
@@ -36,7 +39,7 @@ class TestCopy(unittest.TestCase):
 
     def test_recopy_empty_dir(self):
         dst = os.path.join(self.stage, 'full_dir')
-        os.mkdir(dst)
+        mkdir(dst)
         open(os.path.join(dst, 'file.txt'), 'w').close()
 
         copy('empty_dir', dst)
@@ -51,7 +54,7 @@ class TestCopy(unittest.TestCase):
 
     def test_recopy_full_dir(self):
         dst = os.path.join(self.stage, 'full_dir')
-        os.mkdir(dst)
+        mkdir(dst)
         open(os.path.join(dst, 'existing.txt'), 'w').close()
 
         copy('full_dir', dst)
