@@ -9,8 +9,15 @@ def mode(s):
     return int(s, 8)
 
 
+description = """
+doppel copies files or directories to a destination directory, similar to
+install(1). By default, if only one source is specified, it is copied *onto*
+the destination; if multiple sources are specified, they are copied *into* the
+destination.
+"""
+
 def main():
-    parser = argparse.ArgumentParser(prog='doppel')
+    parser = argparse.ArgumentParser(prog='doppel', description=description)
     parser.add_argument('source', nargs='*', help='source files/directories')
     parser.add_argument('dest', help='destination')
 
