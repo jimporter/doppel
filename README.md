@@ -2,6 +2,7 @@
 
 [![PyPi version][pypi-image]][pypi-link]
 [![Travis build status][travis-image]][travis-link]
+[![Appveyor build status][appveyor-image]][appveyor-link]
 
 **doppel** is a tool for copying binaries and data files to the system, similar
 to [*install(1)*](http://linux.die.net/man/1/install). It's really early in
@@ -15,3 +16,5 @@ This project is licensed under the BSD 3-clause license.
 [pypi-link]: https://pypi.python.org/pypi/doppel
 [travis-image]: https://travis-ci.org/jimporter/doppel.svg?branch=master
 [travis-link]: https://travis-ci.org/jimporter/doppel
+[appveyor-image]: https://ci.appveyor.com/api/projects/status/uuyc9b1g73urehap/branch/master?svg=true
+[appveyor-link]: https://ci.appveyor.com/project/jimporter/doppel/branch/master
