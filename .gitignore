@@ -1,5 +1,6 @@
 *.pyc
 /doppel.egg-info/
 /build/
+/deb_dist/
 /dist/
 /test/stage/
