@@ -35,11 +35,16 @@ def main():
                         help='recurse into subdirectories')
     parser.add_argument('-m', '--mode', metavar='MODE', type=mode,
                         help='set file mode (as octal)')
+    parser.add_argument('-C', '--directory', metavar='DIR', default='.',
+                        help='change to directory DIR before copying')
+    parser.add_argument('-N', '--full-name', action='store_true',
+                        help='use the full name of the source when copying')
 
     args = parser.parse_args()
     if args.onto is None:
         args.onto = len(args.source) == 1
 
+    os.chdir(args.directory)
     try:
         if args.onto:
             if len(args.source) != 1:
@@ -51,7 +56,16 @@ def main():
             if args.parents:
                 makedirs(args.dest, exist_ok=True)
             for src in args.source:
-                copy(src, os.path.join(args.dest, os.path.basename(src)),
+                if args.full_name:
+                    dirname = os.path.dirname(src)
+                    if args.parents and dirname:
+                        makedirs(os.path.join(args.dest, dirname),
+                                 exist_ok=True)
+                    tail = src
+                else:
+                    tail = os.path.basename(src)
+
+                copy(src, os.path.join(args.dest, tail),
                      args.recursive, args.mode)
     except Exception as e:
         parser.error(e)
