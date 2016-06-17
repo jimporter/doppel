@@ -44,14 +44,14 @@ def main():
     if args.onto is None:
         args.onto = len(args.source) == 1
 
-    os.chdir(args.directory)
     try:
         if args.onto:
             if len(args.source) != 1:
                 parser.error('exactly one source required')
             if args.parents:
                 makedirs(os.path.dirname(args.dest), exist_ok=True)
-            copy(args.source[0], args.dest, args.recursive, args.mode)
+            copy(os.path.join(args.directory, args.source[0]), args.dest,
+                 args.recursive, args.mode)
         else:
             if args.parents:
                 makedirs(args.dest, exist_ok=True)
@@ -65,7 +65,8 @@ def main():
                 else:
                     tail = os.path.basename(src)
 
-                copy(src, os.path.join(args.dest, tail),
+                copy(os.path.join(args.directory, src),
+                     os.path.join(args.dest, tail),
                      args.recursive, args.mode)
     except Exception as e:
         parser.error(e)
