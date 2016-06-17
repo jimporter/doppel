@@ -1,8 +1,7 @@
 import argparse
 import os
-import tarfile
 
-from . import copy, makedirs
+from . import archive, copy, makedirs
 from .version import version
 
 description = """
@@ -33,7 +32,7 @@ def main():
     parser.add_argument('-r', '--recursive', action='store_true',
                         help='recurse into subdirectories')
     parser.add_argument('-f', '--format', metavar='FMT',
-                        choices=['tgz', 'tbz2'],
+                        choices=archive.formats,
                         help='format of output file (one of: %(choices)s)')
     parser.add_argument('-m', '--mode', metavar='MODE', type=mode,
                         help='set file mode (as octal)')
@@ -62,7 +61,7 @@ def main():
             copy(os.path.join(args.directory, args.source[0]), args.dest,
                  args.recursive, args.mode)
         elif args.format:
-            with tarfile.open(args.dest, 'w:' + args.format[1:]) as f:
+            with archive.open(args.dest, args.format) as f:
                 for src in args.source:
                     dst = src if args.full_name else os.path.basename(src)
                     if args.dest_prefix:
