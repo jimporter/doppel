@@ -50,7 +50,7 @@ class TestCopy(unittest.TestCase):
         dst = os.path.join(self.stage, 'full_dir')
         copy('full_dir', dst)
         self.assertTrue(os.path.isdir(dst))
-        self.assertEqual(set(os.listdir(dst)), {'file.txt'})
+        self.assertEqual(set(os.listdir(dst)), set())
 
     def test_recopy_full_dir(self):
         dst = os.path.join(self.stage, 'full_dir')
@@ -58,5 +58,20 @@ class TestCopy(unittest.TestCase):
         open(os.path.join(dst, 'existing.txt'), 'w').close()
 
         copy('full_dir', dst)
+        self.assertTrue(os.path.isdir(dst))
+        self.assertEqual(set(os.listdir(dst)), {'existing.txt'})
+
+    def test_copy_full_dir_recursive(self):
+        dst = os.path.join(self.stage, 'full_dir')
+        copy('full_dir', dst, recursive=True)
+        self.assertTrue(os.path.isdir(dst))
+        self.assertEqual(set(os.listdir(dst)), {'file.txt'})
+
+    def test_recopy_full_dir_recursive(self):
+        dst = os.path.join(self.stage, 'full_dir')
+        mkdir(dst)
+        open(os.path.join(dst, 'existing.txt'), 'w').close()
+
+        copy('full_dir', dst, recursive=True)
         self.assertTrue(os.path.isdir(dst))
         self.assertEqual(set(os.listdir(dst)), {'existing.txt', 'file.txt'})

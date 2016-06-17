@@ -19,11 +19,12 @@ def makedirs(path, mode=0o777, exist_ok=False):
             raise
 
 
-def copy(src, dst, mode=None):
+def copy(src, dst, recursive=False, mode=None):
     if os.path.isdir(src):
         mkdir(dst, exist_ok=True)
-        for name in os.listdir(src):
-            copy(os.path.join(src, name), os.path.join(dst, name))
+        if recursive:
+            for name in os.listdir(src):
+                copy(os.path.join(src, name), os.path.join(dst, name))
     else:
         shutil.copyfile(src, dst)
         if mode is not None:

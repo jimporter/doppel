@@ -31,6 +31,8 @@ def main():
                         version='%(prog)s ' + version)
     parser.add_argument('-p', '--parents', action='store_true',
                         help='make parent directories as needed')
+    parser.add_argument('-r', '--recursive', action='store_true',
+                        help='recurse into subdirectories')
     parser.add_argument('-m', '--mode', metavar='MODE', type=mode,
                         help='set file mode (as octal)')
 
@@ -44,12 +46,12 @@ def main():
                 parser.error('exactly one source required')
             if args.parents:
                 makedirs(os.path.dirname(args.dest), exist_ok=True)
-            copy(args.source[0], args.dest, args.mode)
+            copy(args.source[0], args.dest, args.recursive, args.mode)
         else:
             if args.parents:
                 makedirs(args.dest, exist_ok=True)
             for src in args.source:
                 copy(src, os.path.join(args.dest, os.path.basename(src)),
-                     args.mode)
+                     args.recursive, args.mode)
     except Exception as e:
         parser.error(e)
