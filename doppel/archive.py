@@ -1,5 +1,5 @@
 import os
-from tarfile import TarFile
+import tarfile
 from zipfile import ZipFile as _ZipFile
 
 
@@ -26,12 +26,12 @@ class ZipFile(object):
 
 formats = ['gzip', 'bzip2', 'zip']
 _fmts = {
-    'gzip': (TarFile, 'w:gz'),
-    'bzip2': (TarFile, 'w:bz2'),
+    'gzip': (tarfile.open, 'w:gz'),
+    'bzip2': (tarfile.open, 'w:bz2'),
     'zip': (ZipFile, 'w'),
 }
 
 
 def open(name, format):
-    cls, mode = _fmts[format]
-    return cls(name, mode)
+    fn, mode = _fmts[format]
+    return fn(name, mode)
