@@ -1,0 +1,63 @@
+import os
+import posixpath
+import unittest
+import subprocess
+import shutil
+import tarfile
+
+from doppel import makedirs, mkdir
+
+this_dir = os.path.abspath(os.path.dirname(__file__))
+test_data_dir = os.path.join(this_dir, '..', 'data')
+test_stage_dir = os.path.join(this_dir, '..', 'stage')
+
+
+class TestArchive(unittest.TestCase):
+    def setUp(self):
+        self.stage = os.path.join(test_stage_dir, 'archive')
+        if os.path.exists(self.stage):
+            shutil.rmtree(os.path.join(self.stage))
+        makedirs(self.stage)
+        os.chdir(test_data_dir)
+
+        # Git doesn't store empty directories, so make one.
+        mkdir('empty_dir', exist_ok=True)
+
+    def test_archive_file(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fgzip', 'file.txt', dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {'file.txt'})
+
+    def test_archive_empty_dir(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fgzip', 'empty_dir', dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {'empty_dir'})
+
+    def test_archive_full_dir(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fgzip', 'full_dir', dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {'full_dir'})
+
+    def test_archive_full_dir_recursive(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fgzip', '-r', 'full_dir', dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {
+                'full_dir',
+                posixpath.join('full_dir', 'file.txt'),
+            })
+
+    def test_archive_multiple(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fgzip', '-r', 'empty_dir',
+                               'full_dir', 'file.txt', dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {
+                'empty_dir',
+                'full_dir',
+                posixpath.join('full_dir', 'file.txt'),
+                'file.txt',
+            })
