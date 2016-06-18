@@ -1,15 +1,11 @@
 import os
-import unittest
 import subprocess
 import shutil
 import tarfile
 import zipfile
 
+from .. import *
 from doppel import makedirs, mkdir
-
-this_dir = os.path.abspath(os.path.dirname(__file__))
-test_data_dir = os.path.join(this_dir, '..', 'data')
-test_stage_dir = os.path.join(this_dir, '..', 'stage')
 
 
 class TestArchive(unittest.TestCase):

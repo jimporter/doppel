@@ -1,12 +1,8 @@
 import os
-import unittest
 import shutil
 
+from .. import *
 from doppel import copy, makedirs, mkdir
-
-this_dir = os.path.abspath(os.path.dirname(__file__))
-test_data_dir = os.path.join(this_dir, '..', 'data')
-test_stage_dir = os.path.join(this_dir, '..', 'stage')
 
 
 class TestCopy(unittest.TestCase):
@@ -23,19 +19,24 @@ class TestCopy(unittest.TestCase):
     def test_copy_file(self):
         dst = os.path.join(self.stage, 'file.txt')
         copy('file.txt', dst)
-        self.assertTrue(os.path.isfile(dst))
+        assertDirectory(self.stage, {
+            'file.txt',
+        })
 
     def test_recopy_file(self):
         dst = os.path.join(self.stage, 'file.txt')
         open(dst, 'w').close()
         copy('file.txt', dst)
-        self.assertTrue(os.path.isfile(dst))
+        assertDirectory(self.stage, {
+            'file.txt',
+        })
 
     def test_copy_empty_dir(self):
         dst = os.path.join(self.stage, 'empty_dir')
         copy('empty_dir', dst)
-        self.assertTrue(os.path.isdir(dst))
-        self.assertEqual(os.listdir(dst), [])
+        assertDirectory(self.stage, {
+            'empty_dir',
+        })
 
     def test_recopy_empty_dir(self):
         dst = os.path.join(self.stage, 'full_dir')
@@ -43,14 +44,17 @@ class TestCopy(unittest.TestCase):
         open(os.path.join(dst, 'file.txt'), 'w').close()
 
         copy('empty_dir', dst)
-        self.assertTrue(os.path.isdir(dst))
-        self.assertEqual(set(os.listdir(dst)), {'file.txt'})
+        assertDirectory(self.stage, {
+            'full_dir',
+            'full_dir/file.txt',
+        })
 
     def test_copy_full_dir(self):
         dst = os.path.join(self.stage, 'full_dir')
         copy('full_dir', dst)
-        self.assertTrue(os.path.isdir(dst))
-        self.assertEqual(os.listdir(dst), [])
+        assertDirectory(self.stage, {
+            'full_dir',
+        })
 
     def test_recopy_full_dir(self):
         dst = os.path.join(self.stage, 'full_dir')
@@ -58,14 +62,18 @@ class TestCopy(unittest.TestCase):
         open(os.path.join(dst, 'existing.txt'), 'w').close()
 
         copy('full_dir', dst)
-        self.assertTrue(os.path.isdir(dst))
-        self.assertEqual(set(os.listdir(dst)), {'existing.txt'})
+        assertDirectory(self.stage, {
+            'full_dir',
+            'full_dir/existing.txt',
+        })
 
     def test_copy_full_dir_recursive(self):
         dst = os.path.join(self.stage, 'full_dir')
         copy('full_dir', dst, recursive=True)
-        self.assertTrue(os.path.isdir(dst))
-        self.assertEqual(set(os.listdir(dst)), {'file.txt'})
+        assertDirectory(self.stage, {
+            'full_dir',
+            'full_dir/file.txt',
+        })
 
     def test_recopy_full_dir_recursive(self):
         dst = os.path.join(self.stage, 'full_dir')
@@ -73,5 +81,8 @@ class TestCopy(unittest.TestCase):
         open(os.path.join(dst, 'existing.txt'), 'w').close()
 
         copy('full_dir', dst, recursive=True)
-        self.assertTrue(os.path.isdir(dst))
-        self.assertEqual(set(os.listdir(dst)), {'existing.txt', 'file.txt'})
+        assertDirectory(self.stage, {
+            'full_dir',
+            'full_dir/existing.txt',
+            'full_dir/file.txt',
+        })
