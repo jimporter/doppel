@@ -1,9 +1,9 @@
 import os
-import posixpath
 import unittest
 import subprocess
 import shutil
 import tarfile
+import zipfile
 
 from doppel import makedirs, mkdir
 
@@ -47,7 +47,7 @@ class TestArchive(unittest.TestCase):
         with tarfile.open(dst) as t:
             self.assertEqual(set(t.getnames()), {
                 'full_dir',
-                posixpath.join('full_dir', 'file.txt'),
+                'full_dir/file.txt',
             })
 
     def test_archive_multiple(self):
@@ -58,6 +58,30 @@ class TestArchive(unittest.TestCase):
             self.assertEqual(set(t.getnames()), {
                 'empty_dir',
                 'full_dir',
-                posixpath.join('full_dir', 'file.txt'),
+                'full_dir/file.txt',
+                'file.txt',
+            })
+
+    def test_archive_multiple_bzip2(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fbzip2', '-r', 'empty_dir',
+                               'full_dir', 'file.txt', dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {
+                'empty_dir',
+                'full_dir',
+                'full_dir/file.txt',
+                'file.txt',
+            })
+
+    def test_archive_multiple_zip(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fzip', '-r', 'empty_dir',
+                               'full_dir', 'file.txt', dst])
+        with zipfile.ZipFile(dst) as t:
+            self.assertEqual(set(t.namelist()), {
+                'empty_dir/',
+                'full_dir/',
+                'full_dir/file.txt',
                 'file.txt',
             })
