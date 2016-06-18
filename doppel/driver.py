@@ -21,27 +21,29 @@ def main():
     parser.add_argument('--version', action='version',
                         version='%(prog)s ' + version)
 
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('-o', '--onto', action='store_true', dest='onto',
-                       default=None, help='copy source onto dest')
-    group.add_argument('-i', '--into', action='store_false', dest='onto',
-                       help='copy sources into dest')
+    onto_p = parser.add_mutually_exclusive_group()
+    onto_p.add_argument('-o', '--onto', action='store_true', dest='onto',
+                        default=None, help='copy source onto dest')
+    onto_p.add_argument('-i', '--into', action='store_false', dest='onto',
+                        help='copy sources into dest')
 
     parser.add_argument('-p', '--parents', action='store_true',
                         help='make parent directories as needed')
     parser.add_argument('-r', '--recursive', action='store_true',
                         help='recurse into subdirectories')
-    parser.add_argument('-f', '--format', metavar='FMT',
-                        choices=archive.formats,
-                        help='format of output file (one of: %(choices)s)')
     parser.add_argument('-m', '--mode', metavar='MODE', type=mode,
                         help='set file mode (as octal)')
     parser.add_argument('-C', '--directory', metavar='DIR', default='.',
                         help='change to directory DIR before copying')
     parser.add_argument('-N', '--full-name', action='store_true',
                         help='use the full name of the source when copying')
-    parser.add_argument('--dest-prefix', metavar='DIR',
-                        help='a prefix to add to destination files')
+
+    archive_p = parser.add_argument_group('archive-specific arguments')
+    archive_p.add_argument('-f', '--format', metavar='FMT',
+                           choices=archive.formats,
+                           help='format of output file (one of: %(choices)s)')
+    archive_p.add_argument('--dest-prefix', metavar='DIR',
+                           help='a prefix to add to destination files')
 
     parser.add_argument('source', nargs='*', help='source files/directories')
     parser.add_argument('dest', help='destination')
@@ -49,6 +51,8 @@ def main():
     args = parser.parse_args()
     if args.onto is True and args.format:
         parser.error('--format cannot be used with --onto')
+    if args.dest_prefix and not args.format:
+        parser.error('--dest-prefix can only be used with --format')
     if args.onto is None:
         args.onto = len(args.source) == 1 and args.format is None
 

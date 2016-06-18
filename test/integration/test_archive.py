@@ -81,3 +81,16 @@ class TestArchive(unittest.TestCase):
                 'full_dir/file.txt',
                 'file.txt',
             })
+
+    def test_archive_prefix(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fgzip', '-r', '--dest-prefix',
+                               'prefix', 'empty_dir', 'full_dir', 'file.txt',
+                               dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {
+                'prefix/empty_dir',
+                'prefix/full_dir',
+                'prefix/full_dir/file.txt',
+                'prefix/file.txt',
+            })
