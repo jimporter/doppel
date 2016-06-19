@@ -6,10 +6,10 @@ from . import archive, copy, makedirs, require_dirs
 from .version import version
 
 description = """
-doppel copies files or directories to a destination directory, similar to
-install(1). By default, if only one source is specified, it is copied *onto*
-the destination; if multiple sources are specified, they are copied *into* the
-destination.
+doppel copies files or directories to a destination (a file, directory, or
+archive). Think of it as the offspring of install(1) and tar(1). By default, if
+only one source is specified, it is copied *onto* the destination; if multiple
+sources are specified, they are copied *into* the destination.
 """
 
 
@@ -43,7 +43,7 @@ def main():
     archive_p.add_argument('-f', '--format', metavar='FMT',
                            choices=archive.formats,
                            help='format of output file (one of: %(choices)s)')
-    archive_p.add_argument('--dest-prefix', metavar='DIR',
+    archive_p.add_argument('-P', '--dest-prefix', metavar='DIR',
                            help='a prefix to add to destination files')
 
     parser.add_argument('source', nargs='*', help='source files/directories')
