@@ -46,8 +46,9 @@ def main():
     archive_p.add_argument('-P', '--dest-prefix', metavar='DIR',
                            help='a prefix to add to destination files')
 
-    parser.add_argument('source', nargs='*', help='source files/directories')
-    parser.add_argument('dest', help='destination')
+    parser.add_argument('source', metavar='SOURCE', nargs='*',
+                        help='source files/directories')
+    parser.add_argument('dest', metavar='DEST', help='destination')
 
     args = parser.parse_args()
     if args.onto is True and args.format:
