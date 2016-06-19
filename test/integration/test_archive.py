@@ -25,6 +25,13 @@ class TestArchive(unittest.TestCase):
         with tarfile.open(dst) as t:
             self.assertEqual(set(t.getnames()), {'file.txt'})
 
+    def test_archive_file_mode(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-fgzip', '-m600', 'file.txt', dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {'file.txt'})
+            self.assertEqual(t.getmember('file.txt').mode, 0o600)
+
     def test_archive_empty_dir(self):
         dst = os.path.join(self.stage, 'archive.tar.gz')
         subprocess.check_call(['doppel', '-fgzip', 'empty_dir', dst])
@@ -58,7 +65,19 @@ class TestArchive(unittest.TestCase):
                 'file.txt',
             })
 
-    def test_archive_multiple_bzip2(self):
+    def test_archive_mutiple_tar(self):
+        dst = os.path.join(self.stage, 'archive.tar.gz')
+        subprocess.check_call(['doppel', '-ftar', '-r', 'empty_dir',
+                               'full_dir', 'file.txt', dst])
+        with tarfile.open(dst) as t:
+            self.assertEqual(set(t.getnames()), {
+                'empty_dir',
+                'full_dir',
+                'full_dir/file.txt',
+                'file.txt',
+            })
+
+    def test_archive_mutiple_bzip2(self):
         dst = os.path.join(self.stage, 'archive.tar.gz')
         subprocess.check_call(['doppel', '-fbzip2', '-r', 'empty_dir',
                                'full_dir', 'file.txt', dst])

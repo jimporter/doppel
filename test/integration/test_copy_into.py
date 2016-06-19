@@ -1,9 +1,12 @@
 import os
+import platform
 import subprocess
 import shutil
 
 from .. import *
 from doppel import makedirs, mkdir
+
+platform_name = platform.system()
 
 
 class TestCopyInto(unittest.TestCase):
@@ -23,12 +26,31 @@ class TestCopyInto(unittest.TestCase):
             'file.txt',
         })
 
+    @unittest.skipIf(platform_name == 'Windows', 'permissions fail on Windows')
+    def test_copy_file_mode(self):
+        subprocess.check_call(['doppel', '-im600', 'file.txt', self.stage])
+        assertDirectory(self.stage, {
+            'file.txt',
+        })
+        stat = os.stat(os.path.join(self.stage, 'file.txt'))
+        self.assertEqual(stat.st_mode & 0o777, 0o600)
+
     def test_recopy_file(self):
         open(os.path.join(self.stage, 'file.txt'), 'w').close()
         subprocess.check_call(['doppel', '-i', 'file.txt', self.stage])
         assertDirectory(self.stage, {
             'file.txt',
         })
+
+    @unittest.skipIf(platform_name == 'Windows', 'permissions fail on Windows')
+    def test_recopy_file_mode(self):
+        open(os.path.join(self.stage, 'file.txt'), 'w').close()
+        subprocess.check_call(['doppel', '-im600', 'file.txt', self.stage])
+        assertDirectory(self.stage, {
+            'file.txt',
+        })
+        stat = os.stat(os.path.join(self.stage, 'file.txt'))
+        self.assertEqual(stat.st_mode & 0o777, 0o600)
 
     def test_copy_empty_dir(self):
         subprocess.check_call(['doppel', '-i', 'empty_dir', self.stage])

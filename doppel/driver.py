@@ -66,13 +66,13 @@ def main():
                  args.recursive, args.mode)
         elif args.format:
             require_dirs(os.path.dirname(args.dest), create=args.parents)
-            with archive.open(args.dest, args.format) as f:
+            with archive.open(args.dest, 'w', args.format) as f:
                 for src in args.source:
                     dst = src if args.full_name else os.path.basename(src)
                     if args.dest_prefix:
                         dst = os.path.join(args.dest_prefix, dst)
                     f.add(os.path.join(args.directory, src), dst,
-                          recursive=args.recursive)
+                          args.recursive, args.mode)
         else:
             require_dirs(args.dest, create=args.parents)
             for src in args.source:

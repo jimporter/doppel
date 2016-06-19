@@ -1,9 +1,12 @@
 import os
+import platform
 import subprocess
 import shutil
 
 from .. import *
 from doppel import makedirs, mkdir
+
+platform_name = platform.system()
 
 
 class TestCopyOnto(unittest.TestCase):
@@ -24,6 +27,15 @@ class TestCopyOnto(unittest.TestCase):
             'file.txt',
         })
 
+    @unittest.skipIf(platform_name == 'Windows', 'permissions fail on Windows')
+    def test_copy_file_mode(self):
+        dst = os.path.join(self.stage, 'file.txt')
+        subprocess.check_call(['doppel', '-m600', 'file.txt', dst])
+        assertDirectory(self.stage, {
+            'file.txt',
+        })
+        self.assertEqual(os.stat(dst).st_mode & 0o777, 0o600)
+
     def test_recopy_file(self):
         dst = os.path.join(self.stage, 'file.txt')
         open(dst, 'w').close()
@@ -31,6 +43,16 @@ class TestCopyOnto(unittest.TestCase):
         assertDirectory(self.stage, {
             'file.txt',
         })
+
+    @unittest.skipIf(platform_name == 'Windows', 'permissions fail on Windows')
+    def test_recopy_file_mode(self):
+        dst = os.path.join(self.stage, 'file.txt')
+        open(dst, 'w').close()
+        subprocess.check_call(['doppel', '-m600', 'file.txt', dst])
+        assertDirectory(self.stage, {
+            'file.txt',
+        })
+        self.assertEqual(os.stat(dst).st_mode & 0o777, 0o600)
 
     def test_copy_empty_dir(self):
         dst = os.path.join(self.stage, 'empty_dir')

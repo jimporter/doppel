@@ -20,6 +20,8 @@ def makedirs(path, mode=0o777, exist_ok=False):
 
 
 def require_dirs(path, mode=0o777, create=True):
+    if not path:
+        return
     if create:
         makedirs(path, mode, exist_ok=True)
     elif not os.path.exists(path):
