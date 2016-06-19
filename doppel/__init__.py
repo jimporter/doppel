@@ -19,6 +19,15 @@ def makedirs(path, mode=0o777, exist_ok=False):
             raise
 
 
+def require_dirs(path, mode=0o777, create=True):
+    if create:
+        makedirs(path, mode, exist_ok=True)
+    elif not os.path.exists(path):
+        raise IOError("directory '{}' does not exist".format(path))
+    elif not os.path.isdir(path):
+        raise IOError("'{}' is not a directory".format(path))
+
+
 def copy(src, dst, recursive=False, mode=None):
     if os.path.isdir(src):
         mkdir(dst, exist_ok=True)

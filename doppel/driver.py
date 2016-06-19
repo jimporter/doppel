@@ -1,7 +1,8 @@
 import argparse
 import os
+import sys
 
-from . import archive, copy, makedirs
+from . import archive, copy, makedirs, require_dirs
 from .version import version
 
 description = """
@@ -60,11 +61,11 @@ def main():
         if args.onto:
             if len(args.source) != 1:
                 parser.error('exactly one source required')
-            if args.parents:
-                makedirs(os.path.dirname(args.dest), exist_ok=True)
+            require_dirs(os.path.dirname(args.dest), create=args.parents)
             copy(os.path.join(args.directory, args.source[0]), args.dest,
                  args.recursive, args.mode)
         elif args.format:
+            require_dirs(os.path.dirname(args.dest), create=args.parents)
             with archive.open(args.dest, args.format) as f:
                 for src in args.source:
                     dst = src if args.full_name else os.path.basename(src)
@@ -73,12 +74,11 @@ def main():
                     f.add(os.path.join(args.directory, src), dst,
                           recursive=args.recursive)
         else:
-            if args.parents:
-                makedirs(args.dest, exist_ok=True)
+            require_dirs(args.dest, create=args.parents)
             for src in args.source:
                 if args.full_name:
                     dirname = os.path.dirname(src)
-                    if args.parents and dirname:
+                    if dirname:
                         makedirs(os.path.join(args.dest, dirname),
                                  exist_ok=True)
                     tail = src
@@ -89,4 +89,5 @@ def main():
                      os.path.join(args.dest, tail),
                      args.recursive, args.mode)
     except Exception as e:
-        parser.error(e)
+        sys.stderr.write('{}\n'.format(e))
+        return 1
