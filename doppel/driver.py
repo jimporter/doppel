@@ -22,22 +22,30 @@ def main():
     parser.add_argument('--version', action='version',
                         version='%(prog)s ' + version)
 
-    onto_p = parser.add_mutually_exclusive_group()
-    onto_p.add_argument('-o', '--onto', action='store_true', dest='onto',
-                        default=None, help='copy source onto dest')
-    onto_p.add_argument('-i', '--into', action='store_false', dest='onto',
-                        help='copy sources into dest')
+    input_p = parser.add_argument_group('input arguments')
 
-    parser.add_argument('-p', '--parents', action='store_true',
-                        help='make parent directories as needed')
-    parser.add_argument('-r', '--recursive', action='store_true',
-                        help='recurse into subdirectories')
-    parser.add_argument('-m', '--mode', metavar='MODE', type=mode,
-                        help='set file mode (as octal)')
-    parser.add_argument('-C', '--directory', metavar='DIR', default='.',
-                        help='change to directory DIR before copying')
-    parser.add_argument('-N', '--full-name', action='store_true',
-                        help='use the full name of the source when copying')
+    onto_p = input_p.add_mutually_exclusive_group()
+    onto_p.add_argument('-o', '--onto', action='store_true', dest='onto',
+                        default=None, help='copy SOURCE onto DEST')
+    onto_p.add_argument('-i', '--into', action='store_false', dest='onto',
+                        help='copy SOURCEs into DEST')
+
+    input_p.add_argument('-r', '--recursive', action='store_true',
+                         help='recurse into subdirectories')
+    input_p.add_argument('-C', '--directory', metavar='DIR', default='.',
+                         help='change to directory DIR before copying')
+
+    output_p = parser.add_argument_group('output arguments')
+
+    output_p.add_argument('-p', '--parents', action='store_true',
+                          help='make parent directories as needed')
+    output_p.add_argument('-m', '--mode', metavar='MODE', type=mode,
+                          help='set file mode (as octal)')
+    output_p.add_argument('-N', '--full-name', action='store_true',
+                          help='use the full name of the source when copying')
+    output_p.add_argument('-D', '--destdir', action='store_true',
+                          help='prefix the environment variable $(DESTDIR) ' +
+                          'to copied files')
 
     archive_p = parser.add_argument_group('archive-specific arguments')
     archive_p.add_argument('-f', '--format', metavar='FMT',
@@ -57,6 +65,9 @@ def main():
         parser.error('--dest-prefix can only be used with --format')
     if args.onto is None:
         args.onto = len(args.source) == 1 and args.format is None
+
+    if args.destdir:
+        args.dest = os.getenv('DESTDIR') + os.path.abspath(args.dest)
 
     try:
         if args.onto:

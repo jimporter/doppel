@@ -5,9 +5,9 @@ from doppel.version import version
 custom_cmds = {}
 
 try:
-    from flake8.main import Flake8Command
+    from flake8.main.setuptools_command import Flake8
 
-    class LintCommand(Flake8Command):
+    class LintCommand(Flake8):
         def distribution_files(self):
             return ['setup.py', 'doppel', 'test']
 
