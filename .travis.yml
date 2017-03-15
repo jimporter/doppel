@@ -31,7 +31,9 @@ before_install:
   - |
     if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
       brew update
-      brew install ${PYTHON}
+      if [ "${PYTHON}" = "python3" ]; then
+        brew install ${PYTHON}
+      fi
     fi
 install:
   - |
