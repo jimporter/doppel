@@ -43,9 +43,6 @@ def main():
                           help='set file mode (as octal)')
     output_p.add_argument('-N', '--full-name', action='store_true',
                           help='use the full name of the source when copying')
-    output_p.add_argument('-D', '--destdir', action='store_true',
-                          help='prefix the environment variable $(DESTDIR) ' +
-                          'to copied files')
 
     archive_p = parser.add_argument_group('archive-specific arguments')
     archive_p.add_argument('-f', '--format', metavar='FMT',
@@ -65,9 +62,6 @@ def main():
         parser.error('--dest-prefix can only be used with --format')
     if args.onto is None:
         args.onto = len(args.source) == 1 and args.format is None
-
-    if args.destdir:
-        args.dest = os.getenv('DESTDIR') + os.path.abspath(args.dest)
 
     try:
         if args.onto:
