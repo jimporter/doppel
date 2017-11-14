@@ -12,7 +12,7 @@ try:
             return ['setup.py', 'doppel', 'test']
 
     custom_cmds['lint'] = LintCommand
-except:
+except ImportError:
     pass
 
 with open('README.md', 'r') as f:
