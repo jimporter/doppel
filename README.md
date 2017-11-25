@@ -76,7 +76,7 @@ Output version information and exit.
 
 ## License
 
-This project is licensed under the BSD 3-clause license.
+This project is licensed under the [BSD 3-clause license](LICENSE).
 
 [pypi-image]: https://img.shields.io/pypi/v/doppel.svg
 [pypi-link]: https://pypi.python.org/pypi/doppel
