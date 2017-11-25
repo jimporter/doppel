@@ -94,6 +94,6 @@ def main():
                 copy(os.path.join(args.directory, src),
                      os.path.join(args.dest, tail),
                      args.recursive, args.mode)
-    except Exception as e:
+    except Exception as e:  # pragma: no cover
         sys.stderr.write('{}\n'.format(e))
         return 1

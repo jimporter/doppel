@@ -115,3 +115,12 @@ class TestCopyInto(unittest.TestCase):
             'full_dir',
             'full_dir/file.txt',
         })
+
+    def test_copy_full_name(self):
+        subprocess.check_call(['doppel', '-iN', 'file.txt',
+                               'full_dir/file.txt', self.stage])
+        assertDirectory(self.stage, {
+            'file.txt',
+            'full_dir',
+            'full_dir/file.txt',
+        })

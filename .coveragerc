@@ -1,6 +1,7 @@
 [run]
 source = doppel
 parallel = True
+branch = True
 
 [paths]
 source =
