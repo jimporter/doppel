@@ -1,6 +1,9 @@
 *.pyc
+/.coverage
+/.coverage.*
 /doppel.egg-info/
 /build/
 /deb_dist/
 /dist/
+/htmlcov/
 /test/stage/

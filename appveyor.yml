@@ -6,6 +6,8 @@ environment:
 
 install:
   - set PATH=%PYTHON_PATH%;%PYTHON_PATH%\Scripts;%PATH%
-  - pip install .
+  - pip install codecov .[test]
 test_script:
-  - python setup.py test -q
+  - python setup.py coverage -q
+on_success:
+  - codecov

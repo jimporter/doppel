@@ -1,0 +1,15 @@
+[run]
+source = doppel
+parallel = True
+
+[paths]
+source =
+  doppel/
+  /usr/local/lib/*/site-packages/doppel/
+
+[report]
+exclude_lines =
+  pragma: no cover
+  raise NotImplementedError
+  return NotImplemented
+  def __repr__

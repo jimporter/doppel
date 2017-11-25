@@ -11,7 +11,7 @@ env:
   global:
     - PYTHON=python
     - PIP=pip
-    - TEST_COMMAND="test -q"
+    - TEST_COMMAND="coverage -q"
 
 matrix:
   include:
@@ -34,13 +34,12 @@ before_install:
       brew update
       if [ "${PYTHON}" = "python3" ]; then
         brew install ${PYTHON}
+        cp test/scripts/sitecustomize.py .
       fi
     fi
 install:
-  - |
-    if [ "${TEST_COMMAND}" = "lint" ]; then
-      ${PIP} install flake8
-    fi
-  - ${PIP} install .
+  - ${PIP} install codecov .[test]
 script:
   - ${PYTHON} setup.py ${TEST_COMMAND}
+after_success:
+  - codecov
