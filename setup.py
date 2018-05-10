@@ -98,6 +98,7 @@ setup(
 
     packages=find_packages(exclude=['test', 'test.*']),
 
+    install_requires=['elevate >= 0.1.1'],
     extras_require={
         'dev': ['coverage', 'flake8 >= 3.0', 'pypandoc'],
         'test': ['coverage', 'flake8 >= 3.0'],

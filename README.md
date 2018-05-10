@@ -22,6 +22,10 @@ specified, it is copied *onto* the destination; if multiple sources are
 specified, they are copied *into* the destination. This default can be
 explicitly specified with `-o/--onto` or `-i/--into`, respectively.
 
+If the destination requires administrator access to write to, doppel will try to
+detect this an automatically provide a `sudo` (or equivalent) prompt before
+copying.
+
 ## Options
 
 ### -C, --directory=DIR
@@ -65,6 +69,13 @@ A prefix to add to the paths of destination files. This only applies when using
 ### -r, --recursive
 
 Recursively copy source directories to the destination.
+
+### -S, --sudo=WHEN
+
+Before copying, elevate with `sudo` (or your platform's equivalent). `WHEN` is
+one of `always`, `auto` (the default), or `never`. If `auto`, doppel will
+attempt to determine automatically if `sudo` would be needed before performing
+the copy.
 
 ### --help
 
