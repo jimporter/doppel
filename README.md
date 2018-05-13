@@ -77,6 +77,10 @@ one of `always`, `auto` (the default), or `never`. If `auto`, doppel will
 attempt to determine automatically if `sudo` would be needed before performing
 the copy.
 
+### @file
+
+Read options from `file` and use them when executing.
+
 ### --help
 
 Display a help message and exit.

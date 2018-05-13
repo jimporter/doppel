@@ -29,7 +29,8 @@ def maybe_makedirs(path, create, *args, **kwargs):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='doppel', description=description)
+    parser = argparse.ArgumentParser(prog='doppel', description=description,
+                                     fromfile_prefix_chars='@')
     parser.add_argument('--version', action='version',
                         version='%(prog)s ' + version)
     parser.add_argument('--sudo', metavar='WHEN',
