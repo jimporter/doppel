@@ -13,7 +13,7 @@ class TestSudo(unittest.TestCase):
     def setUp(self):
         self.stage = os.path.join(test_stage_dir, 'sudo')
         if os.path.exists(self.stage):
-            shutil.rmtree(os.path.join(self.stage))
+            shutil.rmtree(self.stage)
         makedirs(self.stage)
         os.chdir(test_data_dir)
 

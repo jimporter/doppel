@@ -29,7 +29,22 @@ def existing_parent(path):
     return path
 
 
-def copy(src, dst, recursive=False, mode=None):
+def remove(path, nonexist_ok=False):
+    try:
+        os.remove(path)
+    except OSError as e:
+        if not nonexist_ok or e.errno != errno.ENOENT:
+            raise
+
+
+def copy(src, dst, recursive=False, symlink='relative', mode=None):
+    if symlink != 'never' and os.path.islink(src):
+        link = os.readlink(src)
+        if symlink == 'always' or not os.path.isabs(link):
+            remove(dst, nonexist_ok=True)
+            os.symlink(link, dst)
+            return
+
     if os.path.isdir(src):
         mkdir(dst, exist_ok=True)
         if recursive:

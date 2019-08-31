@@ -12,12 +12,15 @@ class TestCopy(unittest.TestCase):
     def setUp(self):
         self.stage = os.path.join(test_stage_dir, 'copy')
         if os.path.exists(self.stage):
-            shutil.rmtree(os.path.join(self.stage))
+            shutil.rmtree(self.stage)
         makedirs(self.stage)
         os.chdir(test_data_dir)
 
         # Git doesn't store empty directories, so make one.
         mkdir('empty_dir', exist_ok=True)
+
+        if platform_name != 'Windows' and not os.path.exists('abssymlink.txt'):
+            os.symlink(os.path.abspath('file.txt'), 'abssymlink.txt')
 
     def test_copy_file(self):
         dst = os.path.join(self.stage, 'file.txt')
@@ -108,3 +111,54 @@ class TestCopy(unittest.TestCase):
             'full_dir/existing.txt',
             'full_dir/file.txt',
         })
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_copy_symlink(self):
+        dst = os.path.join(self.stage, 'symlink.txt')
+        copy('symlink.txt', dst)
+        assertDirectory(self.stage, {
+            'symlink.txt',
+        })
+        self.assertTrue(os.path.islink(dst))
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_recopy_symlink(self):
+        dst = os.path.join(self.stage, 'symlink.txt')
+        open(dst, 'w').close()
+        copy('symlink.txt', dst)
+        assertDirectory(self.stage, {
+            'symlink.txt',
+        })
+        self.assertTrue(os.path.islink(dst))
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_copy_symlink_as_file(self):
+        dst = os.path.join(self.stage, 'symlink.txt')
+        copy('symlink.txt', dst, symlink='never')
+        assertDirectory(self.stage, {
+            'symlink.txt',
+        })
+        self.assertFalse(os.path.islink(dst))
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_copy_abs_symlink(self):
+        dst = os.path.join(self.stage, 'abssymlink.txt')
+        copy('abssymlink.txt', dst, symlink='always')
+        assertDirectory(self.stage, {
+            'abssymlink.txt',
+        })
+        self.assertTrue(os.path.islink(dst))
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_copy_abs_symlink_as_file(self):
+        dst = os.path.join(self.stage, 'abssymlink.txt')
+        copy('abssymlink.txt', dst)
+        assertDirectory(self.stage, {
+            'abssymlink.txt',
+        })
+        self.assertFalse(os.path.islink(dst))

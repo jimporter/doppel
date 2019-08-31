@@ -13,7 +13,7 @@ class TestExistingParent(unittest.TestCase):
         os.chdir(this_dir)
         stage = os.path.join(test_stage_dir, 'existing_parent')
         if os.path.exists(stage):
-            shutil.rmtree(os.path.join(stage))
+            shutil.rmtree(stage)
         os.makedirs(stage)
         os.chdir(stage)
 

@@ -6,4 +6,5 @@
 /deb_dist/
 /dist/
 /htmlcov/
+/test/data/abssymlink.txt
 /test/stage/

@@ -13,12 +13,15 @@ class TestCopyInto(unittest.TestCase):
     def setUp(self):
         self.stage = os.path.join(test_stage_dir, 'copy_into')
         if os.path.exists(self.stage):
-            shutil.rmtree(os.path.join(self.stage))
+            shutil.rmtree(self.stage)
         makedirs(self.stage)
         os.chdir(test_data_dir)
 
         # Git doesn't store empty directories, so make one.
         mkdir('empty_dir', exist_ok=True)
+
+        if platform_name != 'Windows' and not os.path.exists('abssymlink.txt'):
+            os.symlink(os.path.abspath('file.txt'), 'abssymlink.txt')
 
     def test_copy_file(self):
         subprocess.check_call(['doppel', '-i', 'file.txt', self.stage])
@@ -105,6 +108,59 @@ class TestCopyInto(unittest.TestCase):
             'full_dir/existing.txt',
             'full_dir/file.txt',
         })
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_copy_symlink(self):
+        dst = os.path.join(self.stage, 'symlink.txt')
+        subprocess.check_call(['doppel', '-i', 'symlink.txt', self.stage])
+        assertDirectory(self.stage, {
+            'symlink.txt',
+        })
+        self.assertTrue(os.path.islink(dst))
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_recopy_symlink(self):
+        dst = os.path.join(self.stage, 'symlink.txt')
+        open(dst, 'w').close()
+        subprocess.check_call(['doppel', '-i', 'symlink.txt', self.stage])
+        assertDirectory(self.stage, {
+            'symlink.txt',
+        })
+        self.assertTrue(os.path.islink(dst))
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_copy_symlink_as_file(self):
+        dst = os.path.join(self.stage, 'symlink.txt')
+        subprocess.check_call(['doppel', '-i', '--symlink=never',
+                               'symlink.txt', self.stage])
+        assertDirectory(self.stage, {
+            'symlink.txt',
+        })
+        self.assertFalse(os.path.islink(dst))
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_copy_abs_symlink(self):
+        dst = os.path.join(self.stage, 'abssymlink.txt')
+        subprocess.check_call(['doppel', '-i', '--symlink=always',
+                               'abssymlink.txt', self.stage])
+        assertDirectory(self.stage, {
+            'abssymlink.txt',
+        })
+        self.assertTrue(os.path.islink(dst))
+
+    @unittest.skipIf(platform_name == 'Windows',
+                     '(usually) no symlinks on Windows')
+    def test_copy_abs_symlink_as_file(self):
+        dst = os.path.join(self.stage, 'abssymlink.txt')
+        subprocess.check_call(['doppel', '-i', 'abssymlink.txt', self.stage])
+        assertDirectory(self.stage, {
+            'abssymlink.txt',
+        })
+        self.assertFalse(os.path.islink(dst))
 
     def test_copy_multiple(self):
         subprocess.check_call(['doppel', '-r', 'empty_dir', 'full_dir',

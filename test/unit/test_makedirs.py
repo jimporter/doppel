@@ -13,7 +13,7 @@ class TestMkdir(unittest.TestCase):
         os.chdir(this_dir)
         stage = os.path.join(test_stage_dir, 'mkdir')
         if os.path.exists(stage):
-            shutil.rmtree(os.path.join(stage))
+            shutil.rmtree(stage)
         os.makedirs(stage)
         os.chdir(stage)
 
@@ -36,7 +36,7 @@ class TestMakedirs(unittest.TestCase):
         os.chdir(this_dir)
         stage = os.path.join(test_stage_dir, 'makedirs')
         if os.path.exists(stage):
-            shutil.rmtree(os.path.join(stage))
+            shutil.rmtree(stage)
         os.makedirs(stage)
         os.chdir(stage)
 

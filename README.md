@@ -26,6 +26,10 @@ If the destination requires administrator access to write to, doppel will try to
 detect this an automatically provide a `sudo` (or equivalent) prompt before
 copying.
 
+*Note:* Unlike *install(1)*, doppel copies relative symlinks as symlinks by
+default. To adjust this behavior, you can use the `--symlink` option, described
+below.
+
 ## Options
 
 ### -C, --directory=DIR
@@ -76,6 +80,12 @@ Before copying, elevate with `sudo` (or your platform's equivalent). `WHEN` is
 one of `always`, `auto` (the default), or `never`. If `auto`, doppel will
 attempt to determine automatically if `sudo` would be needed before performing
 the copy.
+
+### --symlink=WHEN
+
+Copy symlinks as links. `WHEN` is one of `always`, `relative` (the default), or
+`never`. If `relative`, only symlinks with relative targets will be copied as
+symlinks; those with absolute targets will be copied as regular files.
 
 ### @file
 

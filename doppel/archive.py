@@ -1,13 +1,14 @@
 import os
+import tarfile
+import zipfile
 from collections import OrderedDict
-from tarfile import TarFile as _TarFile
-from zipfile import ZipFile as _ZipFile
 
 _open = open
 
 
-class ZipFile(_ZipFile):
-    def add(self, name, arcname=None, recursive=True, mode=None):
+class ZipFile(zipfile.ZipFile):
+    def add(self, name, arcname=None, recursive=True, symlink='relative',
+            mode=None):
         if arcname is None:
             arcname = name
         self.write(name, arcname)
@@ -18,12 +19,18 @@ class ZipFile(_ZipFile):
                          recursive)
 
 
-class TarFile(_TarFile):
-    def add(self, name, arcname=None, recursive=True, mode=None):
+class TarFile(tarfile.TarFile):
+    def add(self, name, arcname=None, recursive=True, symlink='relative',
+            mode=None):
         if arcname is None:
             arcname = name
 
         info = self.gettarinfo(name, arcname)
+        if info.issym():
+            if ( symlink == 'never' or
+                 (symlink == 'relative' and os.path.isabs(info.linkname)) ):
+                info.type = tarfile.REGTYPE
+
         if info.isreg():
             if mode is not None:
                 info.mode = mode

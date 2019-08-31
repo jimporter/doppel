@@ -54,6 +54,11 @@ def main():
 
     input_p.add_argument('-r', '--recursive', action='store_true',
                          help='recurse into subdirectories')
+    input_p.add_argument('--symlink', metavar='WHEN',
+                         choices=['never', 'relative', 'always'],
+                         default='relative',
+                         help=('when to copy symbolic links as links (one ' +
+                               'of: %(choices)s; default: %(default)s)'))
     input_p.add_argument('-C', '--directory', metavar='DIR', default='.',
                          help='change to directory DIR before copying')
 
@@ -108,7 +113,7 @@ def main():
         if args.onto:
             maybe_makedirs(destdir, exist_ok=True, create=args.parents)
             copy(os.path.join(args.directory, args.source[0]), args.dest,
-                 args.recursive, args.mode)
+                 args.recursive, args.symlink, args.mode)
         elif args.format:
             maybe_makedirs(destdir, exist_ok=True, create=args.parents)
             with archive.open(args.dest, 'w', args.format) as f:
@@ -117,7 +122,7 @@ def main():
                     if args.dest_prefix:
                         dst = os.path.join(args.dest_prefix, dst)
                     f.add(os.path.join(args.directory, src), dst,
-                          args.recursive, args.mode)
+                          args.recursive, args.symlink, args.mode)
         else:
             maybe_makedirs(destdir, exist_ok=True, create=args.parents)
             for src in args.source:
@@ -132,6 +137,6 @@ def main():
 
                 copy(os.path.join(args.directory, src),
                      os.path.join(args.dest, tail),
-                     args.recursive, args.mode)
+                     args.recursive, args.symlink, args.mode)
     except Exception as e:  # pragma: no cover
         report_error(parser, e)
