@@ -9,7 +9,7 @@ from doppel import archive, makedirs, mkdir
 platform_name = platform.system()
 
 
-class BaseTestArchive(object):
+class BaseTestArchive:
     def setUp(self):
         self.stage = os.path.join(test_stage_dir, 'archive')
         self.archive = os.path.join(self.stage, 'archive{}'.format(self.ext))
