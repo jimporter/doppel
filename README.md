@@ -1,8 +1,7 @@
 # doppel
 
 [![PyPi version][pypi-image]][pypi-link]
-[![Travis build status][travis-image]][travis-link]
-[![Appveyor build status][appveyor-image]][appveyor-link]
+[![Build status][ci-image]][ci-link]
 [![Coverage status][codecov-image]][codecov-link]
 
 **doppel** copies files or directories to a destination (a file, directory, or
@@ -105,9 +104,7 @@ This project is licensed under the [BSD 3-clause license](LICENSE).
 
 [pypi-image]: https://img.shields.io/pypi/v/doppel.svg
 [pypi-link]: https://pypi.python.org/pypi/doppel
-[travis-image]: https://travis-ci.org/jimporter/doppel.svg?branch=master
-[travis-link]: https://travis-ci.org/jimporter/doppel
-[appveyor-image]: https://ci.appveyor.com/api/projects/status/uuyc9b1g73urehap/branch/master?svg=true
-[appveyor-link]: https://ci.appveyor.com/project/jimporter/doppel/branch/master
+[ci-image]: https://github.com/jimporter/doppel/workflows/build/badge.svg
+[ci-link]: https://github.com/jimporter/doppel/actions?query=branch%3Amaster+workflow%3Abuild
 [codecov-image]: https://codecov.io/gh/jimporter/doppel/branch/master/graph/badge.svg
 [codecov-link]: https://codecov.io/gh/jimporter/doppel
