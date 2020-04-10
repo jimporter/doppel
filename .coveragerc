@@ -1,5 +1,5 @@
 [run]
-include = ${TOP}/doppel/*
+source = doppel
 parallel = True
 branch = True
 
