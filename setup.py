@@ -61,18 +61,13 @@ with open(os.path.join(root_dir, 'README.md'), 'r') as f:
     # Read from the file and strip out the badges.
     long_desc = re.sub(r'(^# doppel)\n\n(.+\n)*', r'\1', f.read())
 
-try:
-    import pypandoc
-    long_desc = pypandoc.convert_text(long_desc, 'rst', format='md')
-except ImportError:
-    pass
-
 setup(
     name='doppel',
     version=version,
 
     description='A friendly file copier/installer',
     long_description=long_desc,
+    long_description_content_type='text/markdown',
     keywords='file copier and installer',
     url='https://github.com/jimporter/doppel',
 
@@ -93,13 +88,13 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
 
     packages=find_packages(exclude=['test', 'test.*']),
 
     install_requires=['elevate >= 0.1.2'],
     extras_require={
-        'dev': ['coverage', 'flake8 >= 3.0', 'pypandoc >= 1.4'],
         'test': ['coverage', 'flake8 >= 3.0'],
     },
 
