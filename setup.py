@@ -122,7 +122,7 @@ setup(
 
     install_requires=['elevate >= 0.1.2'],
     extras_require={
-        'test': ['coverage', 'flake8 >= 3.0'],
+        'test': ['coverage', 'flake8 >= 3.0', 'flake8-quotes'],
     },
 
     entry_points={
