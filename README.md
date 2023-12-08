@@ -104,7 +104,7 @@ This project is licensed under the [BSD 3-clause license](LICENSE).
 
 [pypi-image]: https://img.shields.io/pypi/v/doppel.svg
 [pypi-link]: https://pypi.python.org/pypi/doppel
-[ci-image]: https://github.com/jimporter/doppel/workflows/build/badge.svg
-[ci-link]: https://github.com/jimporter/doppel/actions?query=branch%3Amaster+workflow%3Abuild
+[ci-image]: https://github.com/jimporter/doppel/actions/workflows/build.yml/badge.svg
+[ci-link]: https://github.com/jimporter/doppel/actions/workflows/build.yml?query=branch%3Amaster
 [codecov-image]: https://codecov.io/gh/jimporter/doppel/branch/master/graph/badge.svg
 [codecov-link]: https://codecov.io/gh/jimporter/doppel
